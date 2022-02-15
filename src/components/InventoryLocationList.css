@@ -1,0 +1,7 @@
+.itemLabel {
+  padding: 5px;
+}
+.noItemsText {
+  text-align: center;
+  color: darkgray;
+}

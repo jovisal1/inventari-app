@@ -1,0 +1,7 @@
+{
+  "name": "inventariApp",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
