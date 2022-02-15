@@ -6,9 +6,9 @@ export interface Location {
 export interface LocationList extends Array<Location> {}
 
 export interface InventoryItem {
-  num_serie: number;
+  num_serie: string;
   type_id: number;
   location_id: number;
-  model?: string;
+  descripcio?: string;
 }
 export interface InventoryItemList extends Array<InventoryItem> {}

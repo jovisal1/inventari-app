@@ -14,10 +14,8 @@ const ScanInventoryButton: React.FC<ContainerProps> = ({ onAddItem }) => {
   const [showConfirmAlert, showShowConfirmAlert] = useState(false);
   const [scannedInfo, setScannedInfo] = useState<InventoryItem>();
   const openScanner = async () => {
-    // const data = await BarcodeScanner.scan();
-    // parseInventoryInfo(data.text);
-    const myUrl = "http://inventaritic.edu.gva.es/equips?ns=0000954218&ca=ORH1";
-    const obtainedInfo = parseInventoryInfo(myUrl);
+    const data = await BarcodeScanner.scan();
+    const obtainedInfo = parseInventoryInfo(data.text);
     setScannedInfo(obtainedInfo);
     showShowConfirmAlert(true);
   };
@@ -34,7 +32,7 @@ const ScanInventoryButton: React.FC<ContainerProps> = ({ onAddItem }) => {
         onDidDismiss={() => showShowConfirmAlert(false)}
         cssClass="my-custom-class"
         header={"Confirmació!"}
-        message={`Desitja afegir l'ítem <b>${scannedInfo?.num_serie} (${scannedInfo?.model})</b> a l'inventari de l'aula?`}
+        message={`Desitja afegir l'ítem <b>${scannedInfo?.num_serie}</b> a l'inventari de l'aula?`}
         buttons={[
           {
             text: "Cancel·lar",
