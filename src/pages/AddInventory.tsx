@@ -11,8 +11,9 @@ import {
 import InventoryLocationList from "../components/InventoryLocationList";
 import LocationSelector from "../components/LocationSelector";
 import ScanInventoryButton from "../components/ScanInventoryButton";
+import KeyboardInventoryButton from "../components/KeyboardInventoryButton";
 import { Location, InventoryItem, InventoryItemList } from "../common/types";
-import "./AddInventory.css";
+import "../common/styles.css";
 
 let inventoryItems: InventoryItem[] = [
   {
@@ -45,7 +46,7 @@ const CreateInventory: React.FC = () => {
       if (
         inventoryItemsList.some(
           (selItem) =>
-            selItem.location_id === newItem.location_id ||
+            selItem.location_id === newItem.location_id &&
             selItem.num_serie === newItem.num_serie
         )
       ) {
@@ -107,7 +108,14 @@ const CreateInventory: React.FC = () => {
       </IonHeader>
       <IonContent class="ion-padding">
         <InventoryLocationList inventoryItems={inventoryItemsList} />
-        <ScanInventoryButton onAddItem={onAddItem} />
+        <KeyboardInventoryButton
+          locationId={selLocation?.location_id!}
+          onAddItem={onAddItem}
+        />
+        <ScanInventoryButton
+          locationId={selLocation?.location_id!}
+          onAddItem={onAddItem}
+        />
       </IonContent>
     </IonPage>
   );

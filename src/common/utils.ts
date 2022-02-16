@@ -13,3 +13,26 @@ export const parseInventoryInfo = (url: string): InventoryItem => {
 
   return item;
 };
+
+export const itemTypes = [
+  {
+    desc: "Ordinador",
+    type_id: 0,
+  },
+  {
+    desc: "Monitor",
+    type_id: 1,
+  },
+  {
+    desc: "Portàtil",
+    type_id: 2,
+  },
+  {
+    desc: "Tauleta",
+    type_id: 3,
+  },
+  {
+    desc: "Projector",
+    type_id: 4,
+  },
+];

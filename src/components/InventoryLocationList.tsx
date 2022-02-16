@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { IonLabel, IonList, IonItem, IonAvatar } from "@ionic/react";
 import { InventoryItem, InventoryItemList } from "../common/types";
-import "./InventoryLocationList.css";
+import "../common/styles.css";
 
 export interface ContainerProps {
   inventoryItems?: InventoryItemList;

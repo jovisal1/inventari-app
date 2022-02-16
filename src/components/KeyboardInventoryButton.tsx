@@ -5,82 +5,86 @@ import {
   IonFabButton,
   IonIcon,
   IonModal,
-  IonItem,
+  IonContent,
+  IonButton,
+  IonInput,
   IonLabel,
   IonSelect,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
-  IonContent,
   IonGrid,
   IonRow,
   IonCol,
+  IonItem,
   IonSelectOption,
-  IonButton,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
 } from "@ionic/react";
-import { parseInventoryInfo, itemTypes } from "../common/utils";
+import { itemTypes } from "../common/utils";
 import { InventoryItem } from "../common/types";
-import { add } from "ionicons/icons";
+import { keypadOutline } from "ionicons/icons";
 
 export interface ContainerProps {
   onAddItem(newItem: InventoryItem): void;
   locationId: number;
 }
 
-const ScanInventoryButton: React.FC<ContainerProps> = ({
+const KeyboardInventoryButton: React.FC<ContainerProps> = ({
   onAddItem,
   locationId,
 }) => {
   const [showConfirmAlert, showShowConfirmAlert] = useState(false);
+  const [numSerie, setNumSerie] = useState<string>();
   const [selectedItemType, setSelectedItemType] = useState<number>();
-  const [scannedInfo, setScannedInfo] = useState<InventoryItem>();
-
-  const openScanner = async () => {
-    // const data = await BarcodeScanner.scan();
-    // parseInventoryInfo(data.text);
-    const myUrl = "http://inventaritic.edu.gva.es/equips?ns=0000954218&ca=ORH1";
-    const obtainedInfo = parseInventoryInfo(myUrl);
-    setScannedInfo(obtainedInfo);
-    showShowConfirmAlert(true);
-  };
 
   const onAddItemClick = () => {
-    const newScanned: InventoryItem = Object.assign({}, scannedInfo);
-    newScanned.type_id = selectedItemType!;
-    setScannedInfo(newScanned);
-    onAddItem(scannedInfo!);
+    const item: InventoryItem = {
+      num_serie: parseInt(numSerie!, 10),
+      type_id: selectedItemType!,
+      location_id: locationId,
+      model: "",
+    };
+    onAddItem(item);
     hideKeyboardInventoryAlert();
   };
 
   const hideKeyboardInventoryAlert = () => {
+    setNumSerie("");
     setSelectedItemType(-1);
     showShowConfirmAlert(false);
   };
 
   return (
     <>
-      <IonFab vertical="bottom" horizontal="end" slot="fixed">
-        <IonFabButton disabled={locationId === undefined} onClick={openScanner}>
-          <IonIcon icon={add} />
+      <IonFab vertical="bottom" horizontal="start" slot="fixed">
+        <IonFabButton
+          disabled={locationId === undefined}
+          onClick={(e) => showShowConfirmAlert(true)}
+        >
+          <IonIcon icon={keypadOutline} />
         </IonFabButton>
       </IonFab>
       <IonModal isOpen={showConfirmAlert}>
         <IonHeader>
           <IonToolbar>
-            <IonTitle className="ion-text-center">Dispositiu detectat</IonTitle>
+            <IonTitle className="ion-text-center">
+              Afegir dispositiu manualment
+            </IonTitle>
           </IonToolbar>
         </IonHeader>
         <IonContent className="ion-padding">
           <IonGrid>
             <IonRow>
               <IonCol>
-                <IonLabel>
-                  Desitja afegir l'ítem{" "}
-                  <b>
-                    ${scannedInfo?.num_serie} (${scannedInfo?.model})
-                  </b>{" "}
-                  a l'inventari de l'aula?`
-                </IonLabel>
+                <IonItem>
+                  <IonLabel>Número de sèrie:</IonLabel>
+                  <IonInput
+                    className={"ion-text-right"}
+                    value={numSerie}
+                    type="number"
+                    clearInput
+                    onIonChange={(e) => setNumSerie(e.detail.value!)}
+                  ></IonInput>
+                </IonItem>
               </IonCol>
             </IonRow>
             <IonRow>
@@ -126,4 +130,4 @@ const ScanInventoryButton: React.FC<ContainerProps> = ({
   );
 };
 
-export default ScanInventoryButton;
+export default KeyboardInventoryButton;
