@@ -13,14 +13,19 @@ import LocationSelector from "../components/LocationSelector";
 import ScanInventoryButton from "../components/ScanInventoryButton";
 import KeyboardInventoryButton from "../components/KeyboardInventoryButton";
 import { Location, InventoryItem, InventoryItemList } from "../common/types";
+<<<<<<< HEAD
 import "../common/styles.css";
 
+=======
+import "./AddInventory.css";
+import axios from "axios";
+>>>>>>> 97ade7b964c9041fbd2687d43fd6b205b194df08
 let inventoryItems: InventoryItem[] = [
   {
-    num_serie: 11111,
+    num_serie: "11111",
     type_id: 1,
     location_id: 1,
-    model: "aaa",
+    descripcio: "aaa",
   },
 ];
 
@@ -60,6 +65,7 @@ const CreateInventory: React.FC = () => {
         newItem.location_id = selLocation?.location_id!;
         setInventoryItemList([...inventoryItemsList, newItem]);
         inventoryItems.push(newItem);
+        sendInventoryEntry(newItem!);
       }
     }
   };
@@ -69,7 +75,7 @@ const CreateInventory: React.FC = () => {
     setInventoryItemList(
       inventoryItems.filter((selItem) => {
         return (
-          selItem.model!.toLowerCase().includes(searchText.toLowerCase()) ||
+          selItem.descripcio!.toLowerCase().includes(searchText.toLowerCase()) ||
           selItem.num_serie
             .toString()
             .toLowerCase()
@@ -79,6 +85,17 @@ const CreateInventory: React.FC = () => {
     );
   };
 
+  const sendInventoryEntry = async (newItem: InventoryItem) => {
+    try {
+      const { data: response } = await axios.post(
+        `${process.env.REACT_APP_INVENTARI_URL}/inventory`,
+        newItem
+      );
+      
+    } catch (error) {
+      console.error(error);
+    }
+  };
   // useEffect(() => {
   //   const fetchInventoryList = async () => {
   //     try {

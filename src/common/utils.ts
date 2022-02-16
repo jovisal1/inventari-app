@@ -1,14 +1,22 @@
 import { InventoryItem } from "../common/types";
 
-export const parseInventoryInfo = (url: string): InventoryItem => {
-  const queryParams = new URLSearchParams(url);
-  const ns = queryParams.get("http://inventaritic.edu.gva.es/equips?ns");
-  const ca = queryParams.get("ca");
+export const parseInventoryInfo = (barcodeCode: string): InventoryItem => {
+  let ns="";
+  let des="";
+  if (barcodeCode.startsWith("http")) {
+    const queryParams = new URLSearchParams(barcodeCode);
+    ns = queryParams.get("ns")!;
+    des = barcodeCode;
+  } else {
+    ns = barcodeCode;
+    des = "";
+  }
+
   const item: InventoryItem = {
-    num_serie: parseInt(ns!),
+    num_serie: ns,
     type_id: 1,
-    location_id: -1,
-    model: ca!,
+    location_id: 0,
+    descripcio: des,
   };
 
   return item;

@@ -36,10 +36,8 @@ const ScanInventoryButton: React.FC<ContainerProps> = ({
   const [scannedInfo, setScannedInfo] = useState<InventoryItem>();
 
   const openScanner = async () => {
-    // const data = await BarcodeScanner.scan();
-    // parseInventoryInfo(data.text);
-    const myUrl = "http://inventaritic.edu.gva.es/equips?ns=0000954218&ca=ORH1";
-    const obtainedInfo = parseInventoryInfo(myUrl);
+    const data = await BarcodeScanner.scan();
+    const obtainedInfo = parseInventoryInfo(data.text);
     setScannedInfo(obtainedInfo);
     showShowConfirmAlert(true);
   };
@@ -64,6 +62,7 @@ const ScanInventoryButton: React.FC<ContainerProps> = ({
           <IonIcon icon={add} />
         </IonFabButton>
       </IonFab>
+<<<<<<< HEAD
       <IonModal isOpen={showConfirmAlert}>
         <IonHeader>
           <IonToolbar>
@@ -122,6 +121,34 @@ const ScanInventoryButton: React.FC<ContainerProps> = ({
           </IonGrid>
         </IonContent>
       </IonModal>
+=======
+      <IonAlert
+        isOpen={showConfirmAlert}
+        onDidDismiss={() => showShowConfirmAlert(false)}
+        cssClass="my-custom-class"
+        header={"Confirmació!"}
+        message={`Desitja afegir l'ítem <b>${scannedInfo?.num_serie}</b> a l'inventari de l'aula?`}
+        buttons={[
+          {
+            text: "Cancel·lar",
+            role: "cancel",
+            cssClass: "secondary",
+            id: "cancel-button",
+            handler: () => {
+              console.log("Scanned data not confirmed");
+            },
+          },
+          {
+            text: "Acceptar",
+            id: "confirm-button",
+            handler: () => {
+              console.log("Confirm Okay");
+              onAddItem(scannedInfo!);
+            },
+          },
+        ]}
+      />
+>>>>>>> 97ade7b964c9041fbd2687d43fd6b205b194df08
     </>
   );
 };
