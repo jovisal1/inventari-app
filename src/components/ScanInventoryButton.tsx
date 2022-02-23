@@ -31,7 +31,7 @@ const ScanInventoryButton: React.FC<ContainerProps> = ({
   onAddItem,
   locationId,
 }) => {
-  const [showConfirmAlert, showShowConfirmAlert] = useState(false);
+  const [showConfirmAlert, setShowConfirmAlert] = useState(false);
   const [selectedItemType, setSelectedItemType] = useState<number>();
   const [scannedInfo, setScannedInfo] = useState<InventoryItem>();
 
@@ -39,7 +39,7 @@ const ScanInventoryButton: React.FC<ContainerProps> = ({
     const data = await BarcodeScanner.scan();
     const obtainedInfo = parseInventoryInfo(data.text);
     setScannedInfo(obtainedInfo);
-    showShowConfirmAlert(true);
+    setShowConfirmAlert(true);
   };
 
   const onAddItemClick = () => {
@@ -52,7 +52,7 @@ const ScanInventoryButton: React.FC<ContainerProps> = ({
 
   const hideKeyboardInventoryAlert = () => {
     setSelectedItemType(-1);
-    showShowConfirmAlert(false);
+    setShowConfirmAlert(false);
   };
 
   return (
@@ -62,7 +62,6 @@ const ScanInventoryButton: React.FC<ContainerProps> = ({
           <IonIcon icon={add} />
         </IonFabButton>
       </IonFab>
-<<<<<<< HEAD
       <IonModal isOpen={showConfirmAlert}>
         <IonHeader>
           <IonToolbar>
@@ -76,7 +75,7 @@ const ScanInventoryButton: React.FC<ContainerProps> = ({
                 <IonLabel>
                   Desitja afegir l'ítem{" "}
                   <b>
-                    ${scannedInfo?.num_serie} (${scannedInfo?.model})
+                    ${scannedInfo?.num_serie} (${scannedInfo?.descripcio})
                   </b>{" "}
                   a l'inventari de l'aula?`
                 </IonLabel>
@@ -121,34 +120,6 @@ const ScanInventoryButton: React.FC<ContainerProps> = ({
           </IonGrid>
         </IonContent>
       </IonModal>
-=======
-      <IonAlert
-        isOpen={showConfirmAlert}
-        onDidDismiss={() => showShowConfirmAlert(false)}
-        cssClass="my-custom-class"
-        header={"Confirmació!"}
-        message={`Desitja afegir l'ítem <b>${scannedInfo?.num_serie}</b> a l'inventari de l'aula?`}
-        buttons={[
-          {
-            text: "Cancel·lar",
-            role: "cancel",
-            cssClass: "secondary",
-            id: "cancel-button",
-            handler: () => {
-              console.log("Scanned data not confirmed");
-            },
-          },
-          {
-            text: "Acceptar",
-            id: "confirm-button",
-            handler: () => {
-              console.log("Confirm Okay");
-              onAddItem(scannedInfo!);
-            },
-          },
-        ]}
-      />
->>>>>>> 97ade7b964c9041fbd2687d43fd6b205b194df08
     </>
   );
 };

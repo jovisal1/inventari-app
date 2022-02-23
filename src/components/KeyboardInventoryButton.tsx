@@ -38,10 +38,10 @@ const KeyboardInventoryButton: React.FC<ContainerProps> = ({
 
   const onAddItemClick = () => {
     const item: InventoryItem = {
-      num_serie: parseInt(numSerie!, 10),
+      num_serie: numSerie!,
       type_id: selectedItemType!,
       location_id: locationId,
-      model: "",
+      descripcio: "",
     };
     onAddItem(item);
     hideKeyboardInventoryAlert();

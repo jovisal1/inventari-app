@@ -7,19 +7,19 @@ import {
   IonToolbar,
   IonSearchbar,
   useIonAlert,
+  IonButton,
+  IonIcon,
 } from "@ionic/react";
+import { settingsOutline } from "ionicons/icons";
 import InventoryLocationList from "../components/InventoryLocationList";
 import LocationSelector from "../components/LocationSelector";
 import ScanInventoryButton from "../components/ScanInventoryButton";
 import KeyboardInventoryButton from "../components/KeyboardInventoryButton";
+import SettingsMenu from "../components/SettingsMenu";
 import { Location, InventoryItem, InventoryItemList } from "../common/types";
-<<<<<<< HEAD
 import "../common/styles.css";
-
-=======
-import "./AddInventory.css";
 import axios from "axios";
->>>>>>> 97ade7b964c9041fbd2687d43fd6b205b194df08
+
 let inventoryItems: InventoryItem[] = [
   {
     num_serie: "11111",
@@ -29,8 +29,9 @@ let inventoryItems: InventoryItem[] = [
   },
 ];
 
-const CreateInventory: React.FC = () => {
+const AddInventory: React.FC = () => {
   const [searchedText, setSearchedText] = useState("");
+  const [showMenu, setShowMenu] = useState(false);
   const [selLocation, setSelLocation] = useState<Location>();
   const [inventoryItemsList, setInventoryItemList] =
     useState<InventoryItemList>([]);
@@ -75,7 +76,9 @@ const CreateInventory: React.FC = () => {
     setInventoryItemList(
       inventoryItems.filter((selItem) => {
         return (
-          selItem.descripcio!.toLowerCase().includes(searchText.toLowerCase()) ||
+          selItem
+            .descripcio!.toLowerCase()
+            .includes(searchText.toLowerCase()) ||
           selItem.num_serie
             .toString()
             .toLowerCase()
@@ -91,11 +94,11 @@ const CreateInventory: React.FC = () => {
         `${process.env.REACT_APP_INVENTARI_URL}/inventory`,
         newItem
       );
-      
     } catch (error) {
       console.error(error);
     }
   };
+
   // useEffect(() => {
   //   const fetchInventoryList = async () => {
   //     try {
@@ -110,12 +113,21 @@ const CreateInventory: React.FC = () => {
 
   //   fetchInventoryList();
   // }, []);
-
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar color="primary" className="centeredContentToolbar">
           <IonTitle>Afegir inventari</IonTitle>
+          <IonButton
+            slot="end"
+            fill="clear"
+            color="light"
+            onClick={(e) => {
+              setShowMenu(!showMenu);
+            }}
+          >
+            <IonIcon slot="icon-only" icon={settingsOutline} />
+          </IonButton>
         </IonToolbar>
         <LocationSelector onSelectLocation={onSelectLocation} />
         <IonSearchbar
@@ -123,6 +135,7 @@ const CreateInventory: React.FC = () => {
           onIonChange={(e) => onSearchText(e.detail.value!)}
         ></IonSearchbar>
       </IonHeader>
+      <SettingsMenu showMenu={showMenu} />
       <IonContent class="ion-padding">
         <InventoryLocationList inventoryItems={inventoryItemsList} />
         <KeyboardInventoryButton
@@ -138,4 +151,4 @@ const CreateInventory: React.FC = () => {
   );
 };
 
-export default CreateInventory;
+export default AddInventory;
