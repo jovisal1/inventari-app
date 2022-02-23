@@ -13,6 +13,7 @@ export const parseInventoryInfo = (barcodeCode: string): InventoryItem => {
   }
 
   const item: InventoryItem = {
+    inventory_id: -1,
     num_serie: ns,
     type_id: 1,
     location_id: 0,
@@ -23,26 +24,3 @@ export const parseInventoryInfo = (barcodeCode: string): InventoryItem => {
 
   return item;
 };
-
-export const itemTypes: ItemType[] = [
-  {
-    desc: "Ordinador",
-    type_id: 0,
-  },
-  {
-    desc: "Monitor",
-    type_id: 1,
-  },
-  {
-    desc: "Portàtil",
-    type_id: 2,
-  },
-  {
-    desc: "Tauleta",
-    type_id: 3,
-  },
-  {
-    desc: "Projector",
-    type_id: 4,
-  },
-];

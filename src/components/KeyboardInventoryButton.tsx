@@ -14,12 +14,13 @@ const KeyboardInventoryButton: React.FC<ContainerProps> = ({
 }) => {
   const [showConfirmAlert, showShowConfirmAlert] = useState(false);
 
-  const onAddItemClick = (numSerie: string) => {
+  const onAddItemClick = (numSerie: string, description: string) => {
     const item: InventoryItem = {
+      inventory_id: -1,
       num_serie: numSerie!,
       type_id: -1!,
       location_id: -1,
-      descripcio: "",
+      descripcio: description || "Descripció",
       observacions: "",
       aula: "",
     };
@@ -52,13 +53,18 @@ const KeyboardInventoryButton: React.FC<ContainerProps> = ({
             type: "text",
             placeholder: "Número de sèrie:",
           },
+          {
+            name: "description",
+            type: "text",
+            placeholder: "Descripció:",
+          },
         ]}
         buttons={[
           {
             text: "Afegir",
             id: "confirm-button",
             handler: (alertData) => {
-              onAddItemClick(alertData.numSerie);
+              onAddItemClick(alertData.numSerie, alertData.description);
             },
           },
           {

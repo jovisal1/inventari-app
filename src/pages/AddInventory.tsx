@@ -28,44 +28,90 @@ const AddInventory: React.FC = () => {
   const [selItemType, setSelItemType] = useState<ItemType>();
   const [inventoryItemsList, setInventoryItemList] =
     useState<InventoryItemList>([]);
-  const [inventoryItemsFilterList, setInventoryItemsFilterList] =
+  const [inventoryFilteredItemsList, setInventoryFilteredItemList] =
     useState<InventoryItemList>([]);
   const [present] = useIonAlert();
 
   useEffect(() => {
-    const fetchInventory = async () => {
-      try {
-        const { data: response } = await axios.get(
-          `${process.env.REACT_APP_INVENTARI_URL}/inventory`,
-          {
-            headers: {
-              "Access-Control-Allow-Origin": "*",
-              "Access-Control-Allow-Headers":
-                "POST, GET, PUT, DELETE, OPTIONS, HEAD, Authorization, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Allow-Origin",
-              "Content-Type": "application/json",
-            },
+    fetchInventory();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    filterResults();
+  }, [selLocation, searchedText, inventoryItemsList]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const fetchInventory = async () => {
+    try {
+      const { data: response } = await axios.get(
+        `${process.env.REACT_APP_INVENTARI_URL}/inventory`
+      );
+
+      setInventoryItemList(response);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const onDeleteInventoryItem = async (inventoryId: number) => {
+    try {
+      await axios.delete(
+        `${process.env.REACT_APP_INVENTARI_URL}/inventory/${inventoryId}`
+      );
+      fetchInventory();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const onAddInventoryItem = async (newItem: InventoryItem) => {
+    try {
+      await axios.post(
+        `${process.env.REACT_APP_INVENTARI_URL}/inventory`,
+        newItem
+      );
+      fetchInventory();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const filterResults = () => {
+    let inventoryItemsFilterList = [...inventoryItemsList];
+    if (selLocation !== undefined) {
+      inventoryItemsFilterList = inventoryItemsFilterList.filter((selItem) => {
+        return selItem.aula === selLocation.aula;
+      });
+    }
+    if (searchedText !== undefined) {
+      if (searchedText.length !== 0) {
+        inventoryItemsFilterList = inventoryItemsFilterList.filter(
+          (selItem) => {
+            return (
+              selItem
+                .descripcio!.toLowerCase()
+                .includes(searchedText.toLowerCase()) ||
+              selItem.num_serie
+                .toString()
+                .toLowerCase()
+                .includes(searchedText.toLowerCase())
+            );
           }
         );
-        setInventoryItemList(response);
-      } catch (error) {
-        console.error(error);
       }
-    };
-    fetchInventory();
-  }, []);
+    }
+    setInventoryFilteredItemList(inventoryItemsFilterList);
+  };
 
   const onSelectLocation = (selLocation: Location) => {
     if (selLocation === undefined) return;
     setSelLocation(selLocation);
-    setInventoryItemsFilterList(
-      inventoryItemsList.filter((selItem) => {
-        return selItem.aula === selLocation.aula;
-      })
-    );
+  };
+
+  const onSearchText = (searchText: string) => {
+    setSearchedText(searchText);
   };
 
   const onSelectItemType = (selItemType: ItemType) => {
-    console.log("Entra");
     if (selItemType === undefined) return;
     setSelItemType(selItemType);
   };
@@ -88,46 +134,8 @@ const AddInventory: React.FC = () => {
       } else {
         newItem.location_id = selLocation?.location_id!;
         newItem.type_id = selItemType?.type_id!;
-        setInventoryItemList([...inventoryItemsList, newItem]);
-        setInventoryItemsFilterList([...inventoryItemsFilterList, newItem]);
-        sendInventoryEntry(newItem!);
+        onAddInventoryItem(newItem!);
       }
-    }
-  };
-
-  const onSearchText = (searchText: string) => {
-    setSearchedText(searchText);
-    if (searchText.length === 0) {
-      setInventoryItemsFilterList(
-        inventoryItemsList.filter((selItem) => {
-          return selItem.aula === selLocation?.aula!;
-        })
-      );
-    } else {
-      setInventoryItemsFilterList(
-        inventoryItemsFilterList.filter((selItem) => {
-          return (
-            selItem
-              .descripcio!.toLowerCase()
-              .includes(searchText.toLowerCase()) ||
-            selItem.num_serie
-              .toString()
-              .toLowerCase()
-              .includes(searchText.toLowerCase())
-          );
-        })
-      );
-    }
-  };
-
-  const sendInventoryEntry = async (newItem: InventoryItem) => {
-    try {
-      await axios.post(
-        `${process.env.REACT_APP_INVENTARI_URL}/inventory`,
-        newItem
-      );
-    } catch (error) {
-      console.error(error);
     }
   };
 
@@ -148,7 +156,10 @@ const AddInventory: React.FC = () => {
         ></IonSearchbar>
       </IonHeader>
       <IonContent class="ion-padding">
-        <InventoryLocationList inventoryItems={inventoryItemsFilterList} />
+        <InventoryLocationList
+          inventoryItems={inventoryFilteredItemsList}
+          onDeleteItem={onDeleteInventoryItem}
+        />
         <KeyboardInventoryButton
           onAddItem={onAddItem}
           disabled={selLocation === undefined || selItemType === undefined}

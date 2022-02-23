@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { IonLabel, IonSelect, IonItem, IonSelectOption } from "@ionic/react";
-import { ItemType } from "../common/types";
-import { itemTypes } from "../common/utils";
+import axios from "axios";
+import { ItemType, ItemTypeList } from "../common/types";
 import "../common/styles.css";
 
 export interface ContainerProps {
@@ -13,6 +13,22 @@ const InventoryItemTypeSelector: React.FC<ContainerProps> = ({
   selectedItemType,
   onSelectItemType,
 }) => {
+  const [itemTypes, setItemTypes] = useState<ItemTypeList>([]);
+
+  useEffect(() => {
+    const fetchTypes = async () => {
+      try {
+        const { data: response } = await axios.get(
+          `${process.env.REACT_APP_INVENTARI_URL}/type`
+        );
+        setItemTypes(response);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchTypes();
+  }, []);
+
   return (
     <>
       <IonItem>
@@ -23,10 +39,10 @@ const InventoryItemTypeSelector: React.FC<ContainerProps> = ({
           placeholder="Selecciona el tipus"
           onIonChange={(e) => onSelectItemType(e.detail.value)}
         >
-          {itemTypes.map((item) => {
+          {itemTypes!.map((item) => {
             return (
               <IonSelectOption key={item.type_id} value={item}>
-                {item.desc}
+                {item.descripcio}
               </IonSelectOption>
             );
           })}
