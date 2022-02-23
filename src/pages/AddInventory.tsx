@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   IonContent,
   IonHeader,
@@ -7,44 +7,67 @@ import {
   IonToolbar,
   IonSearchbar,
   useIonAlert,
-  IonButton,
-  IonIcon,
 } from "@ionic/react";
-import { settingsOutline } from "ionicons/icons";
 import InventoryLocationList from "../components/InventoryLocationList";
 import LocationSelector from "../components/LocationSelector";
+import InventoryItemTypeSelector from "../components/InventoryItemTypeSelector";
 import ScanInventoryButton from "../components/ScanInventoryButton";
 import KeyboardInventoryButton from "../components/KeyboardInventoryButton";
-import SettingsMenu from "../components/SettingsMenu";
-import { Location, InventoryItem, InventoryItemList } from "../common/types";
+import {
+  Location,
+  InventoryItem,
+  InventoryItemList,
+  ItemType,
+} from "../common/types";
 import "../common/styles.css";
 import axios from "axios";
 
-let inventoryItems: InventoryItem[] = [
-  {
-    num_serie: "11111",
-    type_id: 1,
-    location_id: 1,
-    descripcio: "aaa",
-  },
-];
-
 const AddInventory: React.FC = () => {
   const [searchedText, setSearchedText] = useState("");
-  const [showMenu, setShowMenu] = useState(false);
   const [selLocation, setSelLocation] = useState<Location>();
+  const [selItemType, setSelItemType] = useState<ItemType>();
   const [inventoryItemsList, setInventoryItemList] =
     useState<InventoryItemList>([]);
+  const [inventoryItemsFilterList, setInventoryItemsFilterList] =
+    useState<InventoryItemList>([]);
   const [present] = useIonAlert();
+
+  useEffect(() => {
+    const fetchInventory = async () => {
+      try {
+        const { data: response } = await axios.get(
+          `${process.env.REACT_APP_INVENTARI_URL}/inventory`,
+          {
+            headers: {
+              "Access-Control-Allow-Origin": "*",
+              "Access-Control-Allow-Headers":
+                "POST, GET, PUT, DELETE, OPTIONS, HEAD, Authorization, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Allow-Origin",
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        setInventoryItemList(response);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchInventory();
+  }, []);
 
   const onSelectLocation = (selLocation: Location) => {
     if (selLocation === undefined) return;
     setSelLocation(selLocation);
-    setInventoryItemList(
-      inventoryItems.filter((selItem) => {
-        return selItem.location_id === selLocation.location_id;
+    setInventoryItemsFilterList(
+      inventoryItemsList.filter((selItem) => {
+        return selItem.aula === selLocation.aula;
       })
     );
+  };
+
+  const onSelectItemType = (selItemType: ItemType) => {
+    console.log("Entra");
+    if (selItemType === undefined) return;
+    setSelItemType(selItemType);
   };
 
   const onAddItem = (newItem: InventoryItem) => {
@@ -64,8 +87,9 @@ const AddInventory: React.FC = () => {
         });
       } else {
         newItem.location_id = selLocation?.location_id!;
+        newItem.type_id = selItemType?.type_id!;
         setInventoryItemList([...inventoryItemsList, newItem]);
-        inventoryItems.push(newItem);
+        setInventoryItemsFilterList([...inventoryItemsFilterList, newItem]);
         sendInventoryEntry(newItem!);
       }
     }
@@ -73,24 +97,32 @@ const AddInventory: React.FC = () => {
 
   const onSearchText = (searchText: string) => {
     setSearchedText(searchText);
-    setInventoryItemList(
-      inventoryItems.filter((selItem) => {
-        return (
-          selItem
-            .descripcio!.toLowerCase()
-            .includes(searchText.toLowerCase()) ||
-          selItem.num_serie
-            .toString()
-            .toLowerCase()
-            .includes(searchText.toLowerCase())
-        );
-      })
-    );
+    if (searchText.length === 0) {
+      setInventoryItemsFilterList(
+        inventoryItemsList.filter((selItem) => {
+          return selItem.aula === selLocation?.aula!;
+        })
+      );
+    } else {
+      setInventoryItemsFilterList(
+        inventoryItemsFilterList.filter((selItem) => {
+          return (
+            selItem
+              .descripcio!.toLowerCase()
+              .includes(searchText.toLowerCase()) ||
+            selItem.num_serie
+              .toString()
+              .toLowerCase()
+              .includes(searchText.toLowerCase())
+          );
+        })
+      );
+    }
   };
 
   const sendInventoryEntry = async (newItem: InventoryItem) => {
     try {
-      const { data: response } = await axios.post(
+      await axios.post(
         `${process.env.REACT_APP_INVENTARI_URL}/inventory`,
         newItem
       );
@@ -99,52 +131,31 @@ const AddInventory: React.FC = () => {
     }
   };
 
-  // useEffect(() => {
-  //   const fetchInventoryList = async () => {
-  //     try {
-  //       const { data: response } = await axios.get(
-  //         `${process.env.REACT_APP_INVENTARI_URL}/inventory`
-  //       );
-  //       setInventoryItemList(response);
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   };
-
-  //   fetchInventoryList();
-  // }, []);
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar color="primary" className="centeredContentToolbar">
           <IonTitle>Afegir inventari</IonTitle>
-          <IonButton
-            slot="end"
-            fill="clear"
-            color="light"
-            onClick={(e) => {
-              setShowMenu(!showMenu);
-            }}
-          >
-            <IonIcon slot="icon-only" icon={settingsOutline} />
-          </IonButton>
         </IonToolbar>
         <LocationSelector onSelectLocation={onSelectLocation} />
+        <InventoryItemTypeSelector
+          selectedItemType={selItemType!}
+          onSelectItemType={onSelectItemType}
+        />
         <IonSearchbar
           value={searchedText}
           onIonChange={(e) => onSearchText(e.detail.value!)}
         ></IonSearchbar>
       </IonHeader>
-      <SettingsMenu showMenu={showMenu} />
       <IonContent class="ion-padding">
-        <InventoryLocationList inventoryItems={inventoryItemsList} />
+        <InventoryLocationList inventoryItems={inventoryItemsFilterList} />
         <KeyboardInventoryButton
-          locationId={selLocation?.location_id!}
           onAddItem={onAddItem}
+          disabled={selLocation === undefined || selItemType === undefined}
         />
         <ScanInventoryButton
-          locationId={selLocation?.location_id!}
           onAddItem={onAddItem}
+          disabled={selLocation === undefined || selItemType === undefined}
         />
       </IonContent>
     </IonPage>

@@ -1,8 +1,8 @@
-import { InventoryItem } from "../common/types";
+import { InventoryItem, ItemType } from "../common/types";
 
 export const parseInventoryInfo = (barcodeCode: string): InventoryItem => {
-  let ns="";
-  let des="";
+  let ns = "";
+  let des = "";
   if (barcodeCode.startsWith("http")) {
     const queryParams = new URLSearchParams(barcodeCode);
     ns = queryParams.get("ns")!;
@@ -17,12 +17,14 @@ export const parseInventoryInfo = (barcodeCode: string): InventoryItem => {
     type_id: 1,
     location_id: 0,
     descripcio: des,
+    observacions: "",
+    aula: "",
   };
 
   return item;
 };
 
-export const itemTypes = [
+export const itemTypes: ItemType[] = [
   {
     desc: "Ordinador",
     type_id: 0,
