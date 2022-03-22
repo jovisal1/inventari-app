@@ -1,4 +1,3 @@
-import { Redirect, Route } from "react-router-dom";
 import { IonApp, setupIonicReact } from "@ionic/react";
 import AddInventory from "./pages/AddInventory";
 
