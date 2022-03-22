@@ -36,7 +36,7 @@ const LocationSelector: React.FC<ContainerProps> = ({ onSelectLocation }) => {
 
   return (
     <IonItem>
-      <IonLabel>Localització seleccionada</IonLabel>
+      <IonLabel>Localització seleccionada:</IonLabel>
       <IonSelect
         value={selLocation}
         placeholder="Seleccciona una localització"
