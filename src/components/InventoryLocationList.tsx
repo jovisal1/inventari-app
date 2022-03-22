@@ -64,18 +64,10 @@ const InventoryLocationList: React.FC<ContainerProps> = ({
         )}
         {inventoryItems?.length !== 0 &&
           inventoryItems?.map((inventoryItem, index, arrayElements) => {
-<<<<<<< HEAD
-            console.log(inventoryItem);
             if (disabled) {
               return (
                 <IonItem key={inventoryItem.num_serie}>
                   <IonAvatar>{getAvatarImage(inventoryItem.tipus)}</IonAvatar>
-=======
-            if (disabled) {
-              return (
-                <IonItem key={inventoryItem.num_serie}>
-                  <IonAvatar>{getAvatarImage(inventoryItem.type_id)}</IonAvatar>
->>>>>>> 8ede5646803ebb9630eef51d17108a1b816fbeeb
                   <IonLabel className="itemLabel">
                     <h3>
                       {" "}
@@ -101,13 +93,7 @@ const InventoryLocationList: React.FC<ContainerProps> = ({
                     </IonItemOption>
                   </IonItemOptions>
                   <IonItem>
-<<<<<<< HEAD
                     <IonAvatar>{getAvatarImage(inventoryItem.tipus)}</IonAvatar>
-=======
-                    <IonAvatar>
-                      {getAvatarImage(inventoryItem.type_id)}
-                    </IonAvatar>
->>>>>>> 8ede5646803ebb9630eef51d17108a1b816fbeeb
                     <IonLabel className="itemLabel">
                       <h3>
                         {" "}
