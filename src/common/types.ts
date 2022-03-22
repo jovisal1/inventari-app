@@ -11,6 +11,7 @@ export interface InventoryItem {
   descripcio: string;
   observacions: string;
   type_id: number;
+  tipus?: string;
   location_id: number;
   aula: string;
 }
