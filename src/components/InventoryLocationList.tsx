@@ -63,19 +63,9 @@ const InventoryLocationList: React.FC<ContainerProps> = ({
         )}
         {inventoryItems?.length !== 0 &&
           inventoryItems?.map((inventoryItem, index, arrayElements) => {
-            return (
-              <IonItemSliding key={inventoryItem.num_serie}>
-                <IonItemOptions side="start" color="tertiary">
-                  <IonItemOption
-                    onClick={(e) => {
-                      setSelectedItem(inventoryItem);
-                      setShowItemProperties(true);
-                    }}
-                  >
-                    <IonIcon slot="icon-only" icon={create} color="light" />
-                  </IonItemOption>
-                </IonItemOptions>
-                <IonItem>
+            if (disabled) {
+              return (
+                <IonItem key={inventoryItem.num_serie}>
                   <IonAvatar>{getAvatarImage(inventoryItem.type_id)}</IonAvatar>
                   <IonLabel className="itemLabel">
                     <h3>
@@ -87,17 +77,46 @@ const InventoryLocationList: React.FC<ContainerProps> = ({
                     <p>{inventoryItem.descripcio}</p>
                   </IonLabel>
                 </IonItem>
-                <IonItemOptions side="end" color="tertiary">
-                  <IonItemOption
-                    onClick={(e) => {
-                      onDeleteItem(inventoryItem.inventory_id);
-                    }}
-                  >
-                    <IonIcon slot="icon-only" icon={trash} color="light" />
-                  </IonItemOption>
-                </IonItemOptions>
-              </IonItemSliding>
-            );
+              );
+            } else {
+              return (
+                <IonItemSliding key={inventoryItem.num_serie}>
+                  <IonItemOptions side="start" color="tertiary">
+                    <IonItemOption
+                      onClick={(e) => {
+                        setSelectedItem(inventoryItem);
+                        setShowItemProperties(true);
+                      }}
+                    >
+                      <IonIcon slot="icon-only" icon={create} color="light" />
+                    </IonItemOption>
+                  </IonItemOptions>
+                  <IonItem>
+                    <IonAvatar>
+                      {getAvatarImage(inventoryItem.type_id)}
+                    </IonAvatar>
+                    <IonLabel className="itemLabel">
+                      <h3>
+                        {" "}
+                        <b>Núm sèrie: </b>
+                        {inventoryItem.num_serie}
+                      </h3>
+                      <h4>Especificacions:</h4>
+                      <p>{inventoryItem.descripcio}</p>
+                    </IonLabel>
+                  </IonItem>
+                  <IonItemOptions side="end" color="tertiary">
+                    <IonItemOption
+                      onClick={(e) => {
+                        onDeleteItem(inventoryItem.inventory_id);
+                      }}
+                    >
+                      <IonIcon slot="icon-only" icon={trash} color="light" />
+                    </IonItemOption>
+                  </IonItemOptions>
+                </IonItemSliding>
+              );
+            }
           })}
       </IonList>
       <IonModal isOpen={showItemProperties}>
