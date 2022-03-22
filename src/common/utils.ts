@@ -9,7 +9,7 @@ export const parseInventoryInfo = (barcodeCode: string): InventoryItem => {
     des = barcodeCode;
   } else {
     ns = barcodeCode;
-    des = "";
+    des = barcodeCode;
   }
 
   const item: InventoryItem = {

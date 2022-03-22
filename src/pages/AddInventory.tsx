@@ -5,7 +5,6 @@ import {
   IonPage,
   IonTitle,
   IonToolbar,
-  IonSearchbar,
   useIonAlert,
 } from "@ionic/react";
 import InventoryLocationList from "../components/InventoryLocationList";
@@ -34,11 +33,11 @@ const AddInventory: React.FC = () => {
 
   useEffect(() => {
     fetchInventory();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [selLocation]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     filterResults();
-  }, [selLocation, searchedText, inventoryItemsList]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [searchedText, inventoryItemsList]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchInventory = async () => {
     try {
@@ -108,6 +107,7 @@ const AddInventory: React.FC = () => {
   };
 
   const onSearchText = (searchText: string) => {
+    if (searchText === undefined) return;
     setSearchedText(searchText);
   };
 
@@ -150,15 +150,12 @@ const AddInventory: React.FC = () => {
           selectedItemType={selItemType!}
           onSelectItemType={onSelectItemType}
         />
-        <IonSearchbar
-          value={searchedText}
-          onIonChange={(e) => onSearchText(e.detail.value!)}
-        ></IonSearchbar>
       </IonHeader>
       <IonContent class="ion-padding">
         <InventoryLocationList
           inventoryItems={inventoryFilteredItemsList}
           onDeleteItem={onDeleteInventoryItem}
+          onSearchText={onSearchText}
         />
         <KeyboardInventoryButton
           onAddItem={onAddItem}
