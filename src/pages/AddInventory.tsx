@@ -51,6 +51,26 @@ const AddInventory: React.FC = () => {
     }
   };
 
+  const onUpdateInventoryItem = async (
+    inventoryId: number,
+    updatedItem: InventoryItem
+  ) => {
+    try {
+      await axios.put(
+        `${process.env.REACT_APP_INVENTARI_URL}/inventory/${inventoryId}`,
+        {
+          ...updatedItem,
+          location_id: selLocation?.location_id,
+          type_id: selItemType?.type_id,
+        }
+      );
+      fetchInventory();
+    } catch (error) {
+      console.error(error);
+    }
+    console.log(inventoryId, updatedItem);
+  };
+
   const onDeleteInventoryItem = async (inventoryId: number) => {
     try {
       await axios.delete(
@@ -155,7 +175,9 @@ const AddInventory: React.FC = () => {
         <InventoryLocationList
           inventoryItems={inventoryFilteredItemsList}
           onDeleteItem={onDeleteInventoryItem}
+          onUpdateItem={onUpdateInventoryItem}
           onSearchText={onSearchText}
+          disabled={selLocation === undefined || selItemType === undefined}
         />
         <KeyboardInventoryButton
           onAddItem={onAddItem}

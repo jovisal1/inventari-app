@@ -9,6 +9,14 @@ import {
   IonItemSliding,
   IonIcon,
   IonSearchbar,
+  IonToolbar,
+  IonModal,
+  IonButton,
+  IonHeader,
+  IonTitle,
+  IonContent,
+  IonInput,
+  IonFooter,
 } from "@ionic/react";
 import { trash, create } from "ionicons/icons";
 import { InventoryItemList, InventoryItem } from "../common/types";
@@ -17,14 +25,22 @@ import "../common/styles.css";
 export interface ContainerProps {
   inventoryItems?: InventoryItemList;
   onDeleteItem(inventoryId: number): void;
+  onUpdateItem(inventoryId?: number, updatedItem?: InventoryItem): void;
   onSearchText(searchedText: string): void;
+  disabled: boolean;
 }
 
 const InventoryLocationList: React.FC<ContainerProps> = ({
   inventoryItems,
   onDeleteItem,
   onSearchText,
+  onUpdateItem,
+  disabled,
 }) => {
+  const [showItemProperties, setShowItemProperties] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<InventoryItem>();
+  let updatedItem = { ...(selectedItem as InventoryItem) };
+
   const getAvatarImage = (itemType: number) => {
     var avatarImages: Record<number, object> = {
       1: <img src="assets/images/monitor.png" alt="monitor" />,
@@ -49,6 +65,16 @@ const InventoryLocationList: React.FC<ContainerProps> = ({
           inventoryItems?.map((inventoryItem, index, arrayElements) => {
             return (
               <IonItemSliding key={inventoryItem.num_serie}>
+                <IonItemOptions side="start" color="tertiary">
+                  <IonItemOption
+                    onClick={(e) => {
+                      setSelectedItem(inventoryItem);
+                      setShowItemProperties(true);
+                    }}
+                  >
+                    <IonIcon slot="icon-only" icon={create} color="light" />
+                  </IonItemOption>
+                </IonItemOptions>
                 <IonItem>
                   <IonAvatar>{getAvatarImage(inventoryItem.type_id)}</IonAvatar>
                   <IonLabel className="itemLabel">
@@ -74,6 +100,51 @@ const InventoryLocationList: React.FC<ContainerProps> = ({
             );
           })}
       </IonList>
+      <IonModal isOpen={showItemProperties}>
+        <IonHeader translucent>
+          <IonToolbar color="primary" className="centeredContentToolbar">
+            <IonTitle>Editar dispositiu</IonTitle>
+          </IonToolbar>
+        </IonHeader>
+        <IonContent class="ion-padding">
+          <IonItem>
+            <IonLabel position="stacked">Número de sèrie</IonLabel>
+            <IonInput
+              value={selectedItem?.num_serie}
+              onIonChange={(e) => (updatedItem.num_serie = e.detail.value!)}
+            >
+              {" "}
+            </IonInput>
+          </IonItem>
+          <IonItem>
+            <IonLabel position="stacked">Especificacions</IonLabel>
+            <IonInput
+              value={selectedItem?.descripcio}
+              onIonChange={(e) => (updatedItem.descripcio = e.detail.value!)}
+            >
+              {" "}
+            </IonInput>
+          </IonItem>
+        </IonContent>
+        <IonFooter>
+          <div className="ion-text-center">
+            <IonButton
+              onClick={() => {
+                onUpdateItem(selectedItem?.inventory_id, updatedItem);
+                setShowItemProperties(false);
+              }}
+            >
+              Acceptar
+            </IonButton>
+            <IonButton
+              color="light"
+              onClick={() => setShowItemProperties(false)}
+            >
+              Cancel·lar
+            </IonButton>
+          </div>
+        </IonFooter>
+      </IonModal>
     </>
   );
 };
