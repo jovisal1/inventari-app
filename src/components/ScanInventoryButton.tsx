@@ -3,7 +3,7 @@ import { BarcodeScanner } from "@awesome-cordova-plugins/barcode-scanner";
 import { IonFab, IonFabButton, IonIcon, IonAlert } from "@ionic/react";
 import { InventoryItem } from "../common/types";
 import { parseInventoryInfo } from "../common/utils";
-import { add } from "ionicons/icons";
+import { scan } from "ionicons/icons";
 
 export interface ContainerProps {
   onAddItem(newItem: InventoryItem): void;
@@ -43,7 +43,7 @@ const ScanInventoryButton: React.FC<ContainerProps> = ({
     <>
       <IonFab vertical="bottom" horizontal="end" slot="fixed">
         <IonFabButton disabled={disabled} onClick={openScanner}>
-          <IonIcon icon={add} />
+          <IonIcon icon={scan} />
         </IonFabButton>
       </IonFab>
 
