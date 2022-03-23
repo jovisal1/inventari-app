@@ -30,7 +30,7 @@ export interface ContainerProps {
   disabled: boolean;
 }
 
-const InventoryLocationList: React.FC<ContainerProps> = ({
+const InventoryItemLst: React.FC<ContainerProps> = ({
   inventoryItems,
   onDeleteItem,
   onSearchText,
@@ -49,7 +49,6 @@ const InventoryLocationList: React.FC<ContainerProps> = ({
       projector: <img src="assets/images/projector.png" alt="projector" />,
       ordinador: <img src="assets/images/pc.png" alt="pc" />,
     };
-    console.log(itemType);
     return avatarImages[itemType];
   };
 
@@ -66,7 +65,9 @@ const InventoryLocationList: React.FC<ContainerProps> = ({
           inventoryItems?.map((inventoryItem, index, arrayElements) => {
             if (disabled) {
               return (
-                <IonItem key={inventoryItem.num_serie}>
+                <IonItem
+                  key={`${inventoryItem.num_serie}_${inventoryItem.aula}`}
+                >
                   <IonAvatar>{getAvatarImage(inventoryItem.tipus)}</IonAvatar>
                   <IonLabel className="itemLabel">
                     <h3>
@@ -167,4 +168,4 @@ const InventoryLocationList: React.FC<ContainerProps> = ({
   );
 };
 
-export default InventoryLocationList;
+export default InventoryItemLst;
