@@ -9,7 +9,7 @@ export interface InventoryItem {
   inventory_id: number;
   num_serie: string;
   descripcio: string;
-  observacions: string;
+  observacions?: string;
   type_id: number;
   tipus?: string;
   location_id: number;
@@ -18,7 +18,7 @@ export interface InventoryItem {
 export interface InventoryItemList extends Array<InventoryItem> {}
 
 export interface ItemType {
-  descripcio: string;
+  descripcio?: string;
   type_id: number;
 }
 

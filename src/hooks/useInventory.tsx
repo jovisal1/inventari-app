@@ -48,7 +48,6 @@ const useInventory = () => {
         {
           ...updatedItem,
           location_id: selLocation?.location_id,
-          type_id: selItemType?.type_id,
         }
       );
       fetchInventory();

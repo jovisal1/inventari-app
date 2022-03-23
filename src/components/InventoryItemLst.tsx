@@ -19,7 +19,8 @@ import {
   IonFooter,
 } from "@ionic/react";
 import { trash, create } from "ionicons/icons";
-import { InventoryItemList, InventoryItem } from "../common/types";
+import { InventoryItemList, InventoryItem, ItemType } from "../common/types";
+import InventoryItemTypeSelector from "../components/InventoryItemTypeSelector";
 import "../common/styles.css";
 
 export interface ContainerProps {
@@ -29,6 +30,42 @@ export interface ContainerProps {
   onSearchText(searchedText: string): void;
   disabled: boolean;
 }
+
+const getAvatarImage = (itemType: string = "ordinador") => {
+  var avatarImages: Record<string, object> = {
+    monitor: <img src="assets/images/monitor.png" alt="monitor" />,
+    portatil: <img src="assets/images/tablet.png" alt="laptop" />,
+    tauleta: <img src="assets/images/tablet.png" alt="tablet" />,
+    projector: <img src="assets/images/projector.png" alt="projector" />,
+    ordinador: <img src="assets/images/pc.png" alt="pc" />,
+  };
+  return avatarImages[itemType];
+};
+
+const generateListItem = (inventoryItem: InventoryItem) => {
+  return (
+    <IonItem key={`${inventoryItem.num_serie}_${inventoryItem.aula}`}>
+      <IonAvatar>{getAvatarImage(inventoryItem.tipus)}</IonAvatar>
+      <IonLabel className="itemLabel">
+        <h3>
+          {" "}
+          <b>Núm sèrie: </b>
+          {inventoryItem.num_serie}
+        </h3>
+        <h4>
+          <b>Especificacions: </b>
+          {inventoryItem.descripcio}
+        </h4>
+        {inventoryItem.observacions && (
+          <h4>
+            <b>Observacions: </b>
+            {inventoryItem.observacions}
+          </h4>
+        )}
+      </IonLabel>
+    </IonItem>
+  );
+};
 
 const InventoryItemLst: React.FC<ContainerProps> = ({
   inventoryItems,
@@ -40,16 +77,9 @@ const InventoryItemLst: React.FC<ContainerProps> = ({
   const [showItemProperties, setShowItemProperties] = useState(false);
   const [selectedItem, setSelectedItem] = useState<InventoryItem>();
   let updatedItem = { ...(selectedItem as InventoryItem) };
-
-  const getAvatarImage = (itemType: string = "ordinador") => {
-    var avatarImages: Record<string, object> = {
-      monitor: <img src="assets/images/monitor.png" alt="monitor" />,
-      portatil: <img src="assets/images/tablet.png" alt="laptop" />,
-      tauleta: <img src="assets/images/tablet.png" alt="tablet" />,
-      projector: <img src="assets/images/projector.png" alt="projector" />,
-      ordinador: <img src="assets/images/pc.png" alt="pc" />,
-    };
-    return avatarImages[itemType];
+  let updatedItemType: ItemType = {
+    type_id: updatedItem.type_id,
+    descripcio: updatedItem.tipus,
   };
 
   return (
@@ -64,25 +94,12 @@ const InventoryItemLst: React.FC<ContainerProps> = ({
         {inventoryItems?.length !== 0 &&
           inventoryItems?.map((inventoryItem, index, arrayElements) => {
             if (disabled) {
-              return (
-                <IonItem
-                  key={`${inventoryItem.num_serie}_${inventoryItem.aula}`}
-                >
-                  <IonAvatar>{getAvatarImage(inventoryItem.tipus)}</IonAvatar>
-                  <IonLabel className="itemLabel">
-                    <h3>
-                      {" "}
-                      <b>Núm sèrie: </b>
-                      {inventoryItem.num_serie}
-                    </h3>
-                    <h4>Especificacions:</h4>
-                    <p>{inventoryItem.descripcio}</p>
-                  </IonLabel>
-                </IonItem>
-              );
+              return generateListItem(inventoryItem);
             } else {
               return (
-                <IonItemSliding key={inventoryItem.num_serie}>
+                <IonItemSliding
+                  key={`${inventoryItem.num_serie}_${inventoryItem.aula}`}
+                >
                   <IonItemOptions side="start" color="tertiary">
                     <IonItemOption
                       onClick={(e) => {
@@ -93,18 +110,7 @@ const InventoryItemLst: React.FC<ContainerProps> = ({
                       <IonIcon slot="icon-only" icon={create} color="light" />
                     </IonItemOption>
                   </IonItemOptions>
-                  <IonItem>
-                    <IonAvatar>{getAvatarImage(inventoryItem.tipus)}</IonAvatar>
-                    <IonLabel className="itemLabel">
-                      <h3>
-                        {" "}
-                        <b>Núm sèrie: </b>
-                        {inventoryItem.num_serie}
-                      </h3>
-                      <h4>Especificacions:</h4>
-                      <p>{inventoryItem.descripcio}</p>
-                    </IonLabel>
-                  </IonItem>
+                  {generateListItem(inventoryItem)}
                   <IonItemOptions side="end" color="tertiary">
                     <IonItemOption
                       onClick={(e) => {
@@ -144,6 +150,23 @@ const InventoryItemLst: React.FC<ContainerProps> = ({
               {" "}
             </IonInput>
           </IonItem>
+          <IonItem>
+            <IonLabel position="stacked">Observacions</IonLabel>
+            <IonInput
+              value={selectedItem?.observacions}
+              onIonChange={(e) => (updatedItem.observacions = e.detail.value!)}
+            >
+              {" "}
+            </IonInput>
+          </IonItem>
+          <InventoryItemTypeSelector
+            selectedItemType={updatedItemType}
+            onSelectItemType={(selItemType: ItemType) => {
+              if (selItemType === undefined) return;
+              updatedItem.type_id = selItemType.type_id;
+              updatedItem.tipus = selItemType.descripcio;
+            }}
+          />
         </IonContent>
         <IonFooter>
           <div className="ion-text-center">
