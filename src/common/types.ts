@@ -14,6 +14,7 @@ export interface InventoryItem {
   tipus?: string;
   location_id: number;
   aula: string;
+  text_etiqueta?: string;
 }
 export interface InventoryItemList extends Array<InventoryItem> {}
 

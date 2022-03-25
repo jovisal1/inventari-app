@@ -39,7 +39,7 @@ const getAvatarImage = (itemType: string = "ordinador") => {
     projector: <img src="assets/images/projector.png" alt="projector" />,
     ordinador: <img src="assets/images/pc.png" alt="pc" />,
   };
-  return avatarImages[itemType];
+  return avatarImages[itemType.toLowerCase()];
 };
 
 const generateListItem = (inventoryItem: InventoryItem) => {
@@ -60,6 +60,12 @@ const generateListItem = (inventoryItem: InventoryItem) => {
           <h4>
             <b>Observacions: </b>
             {inventoryItem.observacions}
+          </h4>
+        )}
+        {inventoryItem.text_etiqueta && (
+          <h4>
+            <b>Etiqueta: </b>
+            {inventoryItem.text_etiqueta}
           </h4>
         )}
       </IonLabel>
@@ -150,11 +156,21 @@ const InventoryItemLst: React.FC<ContainerProps> = ({
               {" "}
             </IonInput>
           </IonItem>
+
           <IonItem>
             <IonLabel position="stacked">Observacions</IonLabel>
             <IonInput
               value={selectedItem?.observacions}
               onIonChange={(e) => (updatedItem.observacions = e.detail.value!)}
+            >
+              {" "}
+            </IonInput>
+          </IonItem>
+          <IonItem>
+            <IonLabel position="stacked">Etiqueta</IonLabel>
+            <IonInput
+              value={selectedItem?.text_etiqueta}
+              onIonChange={(e) => (updatedItem.text_etiqueta = e.detail.value!)}
             >
               {" "}
             </IonInput>
