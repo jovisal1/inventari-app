@@ -29,7 +29,12 @@ const useInventory = () => {
   const fetchInventory = async () => {
     try {
       const { data: response } = await axios.get(
-        `${process.env.REACT_APP_INVENTARI_URL}/inventory`
+        `${process.env.REACT_APP_INVENTARI_URL}/inventory`,
+        {
+          headers: {
+            Authorization: `Basic ${process.env.SECRET_TOKEN}`,
+          },
+        }
       );
 
       setInventoryItemList(response);
@@ -48,6 +53,11 @@ const useInventory = () => {
         {
           ...updatedItem,
           location_id: selLocation?.location_id,
+        },
+        {
+          headers: {
+            Authorization: `Basic ${process.env.SECRET_TOKEN}`,
+          },
         }
       );
       fetchInventory();
@@ -59,7 +69,12 @@ const useInventory = () => {
   const onDeleteInventoryItem = async (inventoryId: number) => {
     try {
       await axios.delete(
-        `${process.env.REACT_APP_INVENTARI_URL}/inventory/${inventoryId}`
+        `${process.env.REACT_APP_INVENTARI_URL}/inventory/${inventoryId}`,
+        {
+          headers: {
+            Authorization: `Basic ${process.env.SECRET_TOKEN}`,
+          },
+        }
       );
       fetchInventory();
     } catch (error) {
@@ -71,7 +86,12 @@ const useInventory = () => {
     try {
       await axios.post(
         `${process.env.REACT_APP_INVENTARI_URL}/inventory`,
-        newItem
+        newItem,
+        {
+          headers: {
+            Authorization: `Basic ${process.env.SECRET_TOKEN}`,
+          },
+        }
       );
       fetchInventory();
     } catch (error) {
