@@ -106,7 +106,7 @@ const useInventory = () => {
     setInventoryFilteredItemList(inventoryItemsFilterList);
   };
 
-  const onAddItem = (newItem: InventoryItem) => {
+  const onAddItem = (newItem: InventoryItem, etiqueta: string) => {
     if (newItem !== undefined) {
       if (
         inventoryItemsList.some(
@@ -124,6 +124,7 @@ const useInventory = () => {
       } else {
         newItem.location_id = selLocation?.location_id!;
         newItem.type_id = selItemType?.type_id!;
+        newItem.text_etiqueta = etiqueta;
         onAddInventoryItem(newItem!);
       }
     }

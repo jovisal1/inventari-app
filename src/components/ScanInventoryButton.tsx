@@ -6,7 +6,7 @@ import { parseInventoryInfo } from "../common/utils";
 import { scan } from "ionicons/icons";
 
 export interface ContainerProps {
-  onAddItem(newItem: InventoryItem): void;
+  onAddItem(newItem: InventoryItem, text_etiqueta: string): void;
   disabled: boolean;
 }
 
@@ -21,17 +21,20 @@ const ScanInventoryButton: React.FC<ContainerProps> = ({
     const data = await BarcodeScanner.scan();
     const obtainedInfo = parseInventoryInfo(data.text);
     setScannedInfo(obtainedInfo);
-    let disableConfirmationAlert =
-      process.env.DISABLE_CONFIRMATION_ALERT === "true";
+    let disableConfirmationAlert = process.env.DISABLE_CONFIRMATION_ALERT;
     if (disableConfirmationAlert) {
-      onAddItem(scannedInfo!);
+      if (scannedInfo?.num_serie) {
+        onAddItem(scannedInfo!, "");
+      }
     } else {
-      setShowConfirmAlert(true);
+      if (scannedInfo?.num_serie) {
+        setShowConfirmAlert(true);
+      }
     }
   };
 
-  const onAddItemClick = () => {
-    onAddItem(scannedInfo!);
+  const onAddItemClick = (text_etiqueta: string) => {
+    onAddItem(scannedInfo!, text_etiqueta);
     hideKeyboardInventoryAlert();
   };
 
@@ -52,12 +55,19 @@ const ScanInventoryButton: React.FC<ContainerProps> = ({
         onDidDismiss={() => hideKeyboardInventoryAlert()}
         header={"Dispositiu detectat"}
         message={`Desitja afegir l'ítem <b> ${scannedInfo?.num_serie} (${scannedInfo?.descripcio})</b> a l'inventari de l'aula?`}
+        inputs={[
+          {
+            name: "etiqueta",
+            type: "text",
+            placeholder: "Text etiqueta",
+          },
+        ]}
         buttons={[
           {
             text: "Afegir",
             id: "confirm-button",
             handler: (alertData) => {
-              onAddItemClick();
+              onAddItemClick(alertData.etiqueta);
             },
           },
           {

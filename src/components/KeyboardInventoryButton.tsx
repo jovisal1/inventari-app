@@ -4,7 +4,7 @@ import { InventoryItem } from "../common/types";
 import { keypadOutline } from "ionicons/icons";
 
 export interface ContainerProps {
-  onAddItem(newItem: InventoryItem): void;
+  onAddItem(newItem: InventoryItem, text_etiqueta: string): void;
   disabled: boolean;
 }
 
@@ -14,7 +14,11 @@ const KeyboardInventoryButton: React.FC<ContainerProps> = ({
 }) => {
   const [showConfirmAlert, showShowConfirmAlert] = useState(false);
 
-  const onAddItemClick = (numSerie: string, description: string) => {
+  const onAddItemClick = (
+    numSerie: string,
+    description: string,
+    text_etiqueta: string
+  ) => {
     const item: InventoryItem = {
       inventory_id: -1,
       num_serie: numSerie!,
@@ -24,7 +28,7 @@ const KeyboardInventoryButton: React.FC<ContainerProps> = ({
       observacions: "",
       aula: "",
     };
-    onAddItem(item);
+    onAddItem(item, text_etiqueta);
     hideKeyboardInventoryAlert();
   };
 
@@ -51,12 +55,17 @@ const KeyboardInventoryButton: React.FC<ContainerProps> = ({
           {
             name: "numSerie",
             type: "text",
-            placeholder: "Número de sèrie:",
+            placeholder: "Número de sèrie",
           },
           {
             name: "description",
             type: "text",
-            placeholder: "Descripció:",
+            placeholder: "Descripció",
+          },
+          {
+            name: "etiqueta",
+            type: "text",
+            placeholder: "Text etiqueta",
           },
         ]}
         buttons={[
@@ -64,7 +73,11 @@ const KeyboardInventoryButton: React.FC<ContainerProps> = ({
             text: "Afegir",
             id: "confirm-button",
             handler: (alertData) => {
-              onAddItemClick(alertData.numSerie, alertData.description);
+              onAddItemClick(
+                alertData.numSerie,
+                alertData.description,
+                alertData.etiqueta
+              );
             },
           },
           {
