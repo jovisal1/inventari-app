@@ -32,7 +32,7 @@ const useInventory = () => {
         `${process.env.REACT_APP_INVENTARI_URL}/inventory`,
         {
           headers: {
-            Authorization: `Basic ${process.env.SECRET_TOKEN}`,
+            Authorization: `Basic ${process.env.REACT_APP_SECRET_TOKEN}`,
           },
         }
       );
@@ -56,7 +56,7 @@ const useInventory = () => {
         },
         {
           headers: {
-            Authorization: `Basic ${process.env.SECRET_TOKEN}`,
+            Authorization: `Basic ${process.env.REACT_APP_SECRET_TOKEN}`,
           },
         }
       );
@@ -72,7 +72,7 @@ const useInventory = () => {
         `${process.env.REACT_APP_INVENTARI_URL}/inventory/${inventoryId}`,
         {
           headers: {
-            Authorization: `Basic ${process.env.SECRET_TOKEN}`,
+            Authorization: `Basic ${process.env.REACT_APP_SECRET_TOKEN}`,
           },
         }
       );
@@ -89,7 +89,7 @@ const useInventory = () => {
         newItem,
         {
           headers: {
-            Authorization: `Basic ${process.env.SECRET_TOKEN}`,
+            Authorization: `Basic ${process.env.REACT_APP_SECRET_TOKEN}`,
           },
         }
       );

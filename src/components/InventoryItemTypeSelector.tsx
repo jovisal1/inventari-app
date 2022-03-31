@@ -19,7 +19,12 @@ const InventoryItemTypeSelector: React.FC<ContainerProps> = ({
     const fetchTypes = async () => {
       try {
         const { data: response } = await axios.get(
-          `${process.env.REACT_APP_INVENTARI_URL}/type`
+          `${process.env.REACT_APP_INVENTARI_URL}/type`,
+          {
+            headers: {
+              Authorization: `Basic ${process.env.REACT_APP_SECRET_TOKEN}`,
+            },
+          }
         );
         setItemTypes(response);
       } catch (error) {

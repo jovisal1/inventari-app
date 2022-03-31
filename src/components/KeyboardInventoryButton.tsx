@@ -70,6 +70,15 @@ const KeyboardInventoryButton: React.FC<ContainerProps> = ({
         ]}
         buttons={[
           {
+            text: "Cancel·lar",
+            role: "cancel",
+            cssClass: "secondary",
+            id: "cancel-button",
+            handler: () => {
+              hideKeyboardInventoryAlert();
+            },
+          },
+          {
             text: "Afegir",
             id: "confirm-button",
             handler: (alertData) => {
@@ -78,15 +87,6 @@ const KeyboardInventoryButton: React.FC<ContainerProps> = ({
                 alertData.description,
                 alertData.etiqueta
               );
-            },
-          },
-          {
-            text: "Cancel·lar",
-            role: "cancel",
-            cssClass: "secondary",
-            id: "cancel-button",
-            handler: () => {
-              hideKeyboardInventoryAlert();
             },
           },
         ]}

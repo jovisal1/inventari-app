@@ -13,15 +13,13 @@ const LocationSelector: React.FC<ContainerProps> = ({ onSelectLocation }) => {
 
   useEffect(() => {
     const fetchLocations = async () => {
+      console.log(process.env.REACT_APP_SECRET_TOKEN);
       try {
         const { data: response } = await axios.get(
           `${process.env.REACT_APP_INVENTARI_URL}/location`,
           {
             headers: {
-              "Access-Control-Allow-Origin": "*",
-              "Access-Control-Allow-Headers":
-                "POST, GET, PUT, DELETE, OPTIONS, HEAD, Authorization, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Allow-Origin",
-              "Content-Type": "application/json",
+              Authorization: `Basic ${process.env.REACT_APP_SECRET_TOKEN}`,
             },
           }
         );

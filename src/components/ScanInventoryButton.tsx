@@ -21,7 +21,8 @@ const ScanInventoryButton: React.FC<ContainerProps> = ({
     const data = await BarcodeScanner.scan();
     const obtainedInfo = parseInventoryInfo(data.text);
     setScannedInfo(obtainedInfo);
-    let disableConfirmationAlert = process.env.DISABLE_CONFIRMATION_ALERT;
+    let disableConfirmationAlert =
+      process.env.REACT_APP_DISABLE_CONFIRMATION_ALERT;
     if (disableConfirmationAlert) {
       if (scannedInfo?.num_serie) {
         onAddItem(scannedInfo!, "");
@@ -64,19 +65,19 @@ const ScanInventoryButton: React.FC<ContainerProps> = ({
         ]}
         buttons={[
           {
-            text: "Afegir",
-            id: "confirm-button",
-            handler: (alertData) => {
-              onAddItemClick(alertData.etiqueta);
-            },
-          },
-          {
             text: "Cancel·lar",
             role: "cancel",
             cssClass: "secondary",
             id: "cancel-button",
             handler: () => {
               hideKeyboardInventoryAlert();
+            },
+          },
+          {
+            text: "Afegir",
+            id: "confirm-button",
+            handler: (alertData) => {
+              onAddItemClick(alertData.etiqueta);
             },
           },
         ]}
