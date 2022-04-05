@@ -5,13 +5,13 @@ import {
   IonPage,
   IonTitle,
   IonToolbar,
+  IonSearchbar,
 } from "@ionic/react";
 import InventoryItemLst from "../components/InventoryItemLst";
 import LocationSelector from "../components/LocationSelector";
-import InventoryItemTypeSelector from "../components/InventoryItemTypeSelector";
 import ScanInventoryButton from "../components/ScanInventoryButton";
 import KeyboardInventoryButton from "../components/KeyboardInventoryButton";
-import { Location, ItemType } from "../common/types";
+import { Location } from "../common/types";
 import useInventory from "../hooks/useInventory";
 import "../common/styles.css";
 
@@ -30,41 +30,27 @@ const AddInventory: React.FC = () => {
             inventoryUtils.setSelLocation(selLocation);
           }}
         />
-        <InventoryItemTypeSelector
-          selectedItemType={inventoryUtils.selItemType!}
-          onSelectItemType={(selItemType: ItemType) => {
-            if (selItemType === undefined) return;
-            inventoryUtils.setSelItemType(selItemType);
+        <IonSearchbar
+          onIonChange={(e) => {
+            if (e.detail.value! === undefined) return;
+            inventoryUtils.setSearchedText(e.detail.value!);
           }}
-        />
+        ></IonSearchbar>
       </IonHeader>
       <IonContent class="ion-padding">
         <InventoryItemLst
           inventoryItems={inventoryUtils.inventoryFilteredItemsList}
           onDeleteItem={inventoryUtils.onDeleteInventoryItem}
           onUpdateItem={inventoryUtils.onUpdateInventoryItem}
-          onSearchText={(searchText: string) => {
-            if (searchText === undefined) return;
-            inventoryUtils.setSearchedText(searchText);
-          }}
-          disabled={
-            inventoryUtils.selLocation === undefined ||
-            inventoryUtils.selItemType === undefined
-          }
+          disabled={inventoryUtils.selLocation === undefined}
         />
         <KeyboardInventoryButton
           onAddItem={inventoryUtils.onAddItem}
-          disabled={
-            inventoryUtils.selLocation === undefined ||
-            inventoryUtils.selItemType === undefined
-          }
+          disabled={inventoryUtils.selLocation === undefined}
         />
         <ScanInventoryButton
           onAddItem={inventoryUtils.onAddItem}
-          disabled={
-            inventoryUtils.selLocation === undefined ||
-            inventoryUtils.selItemType === undefined
-          }
+          disabled={inventoryUtils.selLocation === undefined}
         />
       </IonContent>
     </IonPage>

@@ -27,7 +27,6 @@ export interface ContainerProps {
   inventoryItems?: InventoryItemList;
   onDeleteItem(inventoryId: number): void;
   onUpdateItem(inventoryId?: number, updatedItem?: InventoryItem): void;
-  onSearchText(searchedText: string): void;
   disabled: boolean;
 }
 
@@ -36,8 +35,9 @@ const getAvatarImage = (itemType: string = "ordinador") => {
     monitor: <img src="assets/images/monitor.png" alt="monitor" />,
     portatil: <img src="assets/images/tablet.png" alt="laptop" />,
     tauleta: <img src="assets/images/tablet.png" alt="tablet" />,
-    projector: <img src="assets/images/projector.png" alt="projector" />,
+    proyector: <img src="assets/images/projector.png" alt="projector" />,
     ordinador: <img src="assets/images/pc.png" alt="pc" />,
+    impressora: <img src="assets/images/impressora.png" alt="impressora" />,
   };
   return avatarImages[itemType.toLowerCase()];
 };
@@ -76,7 +76,6 @@ const generateListItem = (inventoryItem: InventoryItem) => {
 const InventoryItemLst: React.FC<ContainerProps> = ({
   inventoryItems,
   onDeleteItem,
-  onSearchText,
   onUpdateItem,
   disabled,
 }) => {
@@ -90,9 +89,6 @@ const InventoryItemLst: React.FC<ContainerProps> = ({
 
   return (
     <>
-      <IonSearchbar
-        onIonChange={(e) => onSearchText(e.detail.value!)}
-      ></IonSearchbar>
       <IonList>
         {inventoryItems?.length === 0 && (
           <h4 className="noItemsText">No existeix cap element inventariat</h4>

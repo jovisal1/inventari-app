@@ -105,6 +105,10 @@ const useInventory = () => {
       inventoryItemsFilterList = inventoryItemsFilterList.filter((selItem) => {
         return selItem.aula === selLocation.aula;
       });
+    } else {
+      inventoryItemsFilterList = inventoryItemsFilterList.filter((selItem) => {
+        return selItem.aula === undefined;
+      });
     }
     if (searchedText !== undefined) {
       if (searchedText.length !== 0) {

@@ -14,6 +14,7 @@ const InventoryItemTypeSelector: React.FC<ContainerProps> = ({
   onSelectItemType,
 }) => {
   const [itemTypes, setItemTypes] = useState<ItemTypeList>([]);
+  const [selValue, setSelValue] = useState<ItemType>();
 
   useEffect(() => {
     const fetchTypes = async () => {
@@ -27,6 +28,11 @@ const InventoryItemTypeSelector: React.FC<ContainerProps> = ({
           }
         );
         setItemTypes(response);
+        setSelValue(
+          response.filter((elem: ItemType) => {
+            return elem.type_id === selectedItemType.type_id;
+          })
+        );
       } catch (error) {
         console.error(error);
       }
@@ -40,7 +46,7 @@ const InventoryItemTypeSelector: React.FC<ContainerProps> = ({
         <IonLabel>Tipus de dispositiu:</IonLabel>
         <IonSelect
           interface="popover"
-          value={selectedItemType}
+          value={selValue}
           placeholder="Selecciona el tipus"
           onIonChange={(e) => onSelectItemType(e.detail.value)}
         >
