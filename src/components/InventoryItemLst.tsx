@@ -38,6 +38,8 @@ const getAvatarImage = (itemType: string = "ordinador") => {
     proyector: <img src="assets/images/projector.png" alt="projector" />,
     ordinador: <img src="assets/images/pc.png" alt="pc" />,
     impressora: <img src="assets/images/impressora.png" alt="impressora" />,
+    switch: <img src="assets/images/switch.png" alt="switch" />,
+    mifi: <img src="assets/images/mifi.png" alt="mifi" />,
   };
   return avatarImages[itemType.toLowerCase()];
 };
