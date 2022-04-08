@@ -19,11 +19,15 @@ const ScanInventoryButton: React.FC<ContainerProps> = ({
 
   const openScanner = async () => {
     const data = await BarcodeScanner.scan();
-    const obtainedInfo = parseInventoryInfo(data.text);
+    // alert(JSON.stringify(data));
+    const obtainedInfo = parseInventoryInfo(
+      data.text.replace(/(\r\n|\n|\r)/gm, "")
+    );
+    // alert(JSON.stringify(obtainedInfo));
     setScannedInfo(obtainedInfo);
     let disableConfirmationAlert =
       process.env.REACT_APP_DISABLE_CONFIRMATION_ALERT;
-    if (disableConfirmationAlert) {
+    if (disableConfirmationAlert === "true") {
       if (scannedInfo?.num_serie) {
         onAddItem(scannedInfo!, "");
       }

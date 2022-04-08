@@ -4,8 +4,8 @@ export const parseInventoryInfo = (barcodeCode: string): InventoryItem => {
   let ns = "";
   let des = "";
   if (barcodeCode.startsWith("http")) {
-    const queryParams = new URLSearchParams(barcodeCode);
-    ns = queryParams.get("ns")!;
+    let url = new URL(barcodeCode);
+    ns = url.searchParams.get("ns")!;
     des = barcodeCode;
   } else {
     ns = barcodeCode;
