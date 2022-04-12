@@ -11,7 +11,6 @@ import { useIonAlert } from "@ionic/react";
 const useInventory = () => {
   const [searchedText, setSearchedText] = useState("");
   const [selLocation, setSelLocation] = useState<Location>();
-  const [selItemType, setSelItemType] = useState<ItemType>();
   const [inventoryItemsList, setInventoryItemList] =
     useState<InventoryItemList>([]);
   const [inventoryFilteredItemsList, setInventoryFilteredItemList] =
@@ -130,13 +129,18 @@ const useInventory = () => {
     setInventoryFilteredItemList(inventoryItemsFilterList);
   };
 
-  const onAddItem = (newItem: InventoryItem, etiqueta: string) => {
+  const onAddItem = (
+    newItem: InventoryItem,
+    etiqueta: string,
+    itemType: ItemType = {
+      descripcio: "",
+      type_id: 0,
+    }
+  ) => {
     if (newItem !== undefined) {
       if (
         inventoryItemsList.some(
-          (selItem) =>
-            selItem.num_serie === newItem.num_serie &&
-            selItem.tipus === selItemType?.descripcio
+          (selItem) => selItem.num_serie === newItem.num_serie
         )
       ) {
         present({
@@ -147,7 +151,7 @@ const useInventory = () => {
         });
       } else {
         newItem.location_id = selLocation?.location_id!;
-        newItem.type_id = selItemType?.type_id!;
+        newItem.type_id = itemType?.type_id || 0;
         newItem.text_etiqueta = etiqueta;
         onAddInventoryItem(newItem!);
       }
@@ -156,8 +160,6 @@ const useInventory = () => {
 
   return {
     setSelLocation,
-    setSelItemType,
-    selItemType,
     selLocation,
     setSearchedText,
     inventoryFilteredItemsList,

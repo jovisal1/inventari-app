@@ -5,16 +5,16 @@ import { ItemType, ItemTypeList } from "../common/types";
 import "../common/styles.css";
 
 export interface ContainerProps {
-  selectedItemType: ItemType;
+  selItemType?: ItemType;
   onSelectItemType(selItem: ItemType): void;
 }
 
 const InventoryItemTypeSelector: React.FC<ContainerProps> = ({
-  selectedItemType,
+  selItemType,
   onSelectItemType,
 }) => {
   const [itemTypes, setItemTypes] = useState<ItemTypeList>([]);
-  const [selValue, setSelValue] = useState<ItemType>();
+  const [selectedItemType, setSelectedItemType] = useState<ItemType>();
 
   useEffect(() => {
     const fetchTypes = async () => {
@@ -28,9 +28,9 @@ const InventoryItemTypeSelector: React.FC<ContainerProps> = ({
           }
         );
         setItemTypes(response);
-        setSelValue(
+        setSelectedItemType(
           response.filter((elem: ItemType) => {
-            return elem.type_id === selectedItemType.type_id;
+            return elem.type_id === selItemType?.type_id;
           })
         );
       } catch (error) {
@@ -46,9 +46,12 @@ const InventoryItemTypeSelector: React.FC<ContainerProps> = ({
         <IonLabel>Tipus de dispositiu:</IonLabel>
         <IonSelect
           interface="popover"
-          value={selValue}
+          value={selectedItemType}
           placeholder="Selecciona el tipus"
-          onIonChange={(e) => onSelectItemType(e.detail.value)}
+          onIonChange={(e) => {
+            onSelectItemType(e.detail.value);
+            setSelectedItemType(e.detail.value);
+          }}
         >
           {itemTypes!.map((item) => {
             return (

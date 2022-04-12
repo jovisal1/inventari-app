@@ -8,7 +8,6 @@ import {
   IonItemOption,
   IonItemSliding,
   IonIcon,
-  IonSearchbar,
   IonToolbar,
   IonModal,
   IonButton,
@@ -40,8 +39,11 @@ const getAvatarImage = (itemType: string = "ordinador") => {
     impressora: <img src="assets/images/impressora.png" alt="impressora" />,
     switch: <img src="assets/images/switch.png" alt="switch" />,
     mifi: <img src="assets/images/mifi.png" alt="mifi" />,
+    taula: <img src="assets/images/desktop.png" alt="taula" />,
+    armari: <img src="assets/images/shelves.png" alt="armari" />,
+    nas: <img src="assets/images/nas.png" alt="nas" />,
   };
-  return avatarImages[itemType.toLowerCase()];
+  return avatarImages[itemType.toLowerCase()] || avatarImages["ordinador"];
 };
 
 const generateListItem = (inventoryItem: InventoryItem) => {
@@ -84,10 +86,6 @@ const InventoryItemLst: React.FC<ContainerProps> = ({
   const [showItemProperties, setShowItemProperties] = useState(false);
   const [selectedItem, setSelectedItem] = useState<InventoryItem>();
   let updatedItem = { ...(selectedItem as InventoryItem) };
-  let updatedItemType: ItemType = {
-    type_id: updatedItem.type_id,
-    descripcio: updatedItem.tipus,
-  };
 
   return (
     <>
@@ -174,7 +172,10 @@ const InventoryItemLst: React.FC<ContainerProps> = ({
             </IonInput>
           </IonItem>
           <InventoryItemTypeSelector
-            selectedItemType={updatedItemType}
+            selItemType={{
+              type_id: selectedItem?.type_id,
+              descripcio: selectedItem?.tipus,
+            }}
             onSelectItemType={(selItemType: ItemType) => {
               if (selItemType === undefined) return;
               updatedItem.type_id = selItemType.type_id;
